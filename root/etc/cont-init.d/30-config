@@ -1,0 +1,27 @@
+#!/usr/bin/with-contenv bash
+
+# Give abc a sudo shell for development
+chsh abc -s /bin/bash
+sed -e 's/%sudo	ALL=(ALL:ALL) ALL/%sudo ALL=(ALL:ALL) NOPASSWD: ALL/g' \
+  -i /etc/sudoers
+sed -e 's/^wheel:\(.*\)/wheel:\1,abc/g' -i /etc/group
+
+# Check for lock file to only run git operations once
+if [ -e /lock.file ]
+then
+  # Lock exists not importing project this is a restart
+  echo "Lock exists just starting cloud9"
+else
+  # Create directory for project
+  mkdir -p /usr/src/$PROJECTNAME
+  # Clone the url the user passed to this directory
+  git clone $GITURL /usr/src/$PROJECTNAME
+fi
+
+# Create lock file after first run
+touch /lock.file
+
+# permissions
+chown -R abc:abc \
+ /usr/src/$PROJECTNAME
+
