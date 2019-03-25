@@ -1,9 +1,6 @@
 FROM taisun/dev_cloud9:arm64v8-base as c9files
 
-FROM lsiobase/ubuntu.arm64:bionic
-
-# Add qemu to build on x86_64 systems
-COPY qemu-aarch64-static /usr/bin
+FROM lsiobase/ubuntu:arm64v8-bionic
 
 # set version label
 LABEL maintainer="thelamer"
